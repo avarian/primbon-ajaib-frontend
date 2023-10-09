@@ -1,14 +1,14 @@
-import { useState } from "react";
-import "./App.css";
-import Login from "./Login";
+// import "./App.css";
+import Chatbox from "./Chatbox";
 
 function App() {
-  const [count, setCount] = useState(0);
+  // const [count, setCount] = useState(0);
 
   return (
     <>
       <main className="App">
-        <Login />
+        {/* <Login /> */}
+        <Chatbox />
       </main>
     </>
   );
