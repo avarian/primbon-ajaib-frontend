@@ -1,3 +1,4 @@
+import Dropdown from "react-bootstrap/Dropdown";
 import "./Chatbox.css";
 
 const Chatbox = () => {
@@ -12,6 +13,49 @@ const Chatbox = () => {
           <div className="col-lg-12">
             <div className="card chat-app" style={{ height: "95vh" }}>
               <div id="plist" className="people-list">
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    {/* <span className="input-group-text"> */}
+                    {/* <img
+                      src="/src/assets/person-circle.svg"
+                      style={{ height: "100%" }}
+                    /> */}
+                    {/* <i className="fa fa-search"></i>
+                    </span> */}
+                    {/* <div className="dropdown"> */}
+                    <Dropdown>
+                      <Dropdown.Toggle
+                        variant="secondary"
+                        id="dropdown-profile"
+                      >
+                        <i className="fa fa-user"></i> Profile
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+                        <Dropdown.Item href="#/action-1">Profile</Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">
+                          Change Password
+                        </Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">Log Out</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                    {/* </div> */}
+                  </div>
+                  <div>
+                    <button
+                      className="btn btn-outline-secondary"
+                      type="button"
+                      style={{ position: "absolute", right: 0 }}
+                    >
+                      New Chat
+                    </button>
+                  </div>
+                </div>
+                {/* <br /> */}
+                <hr />
+                {/* <div>
+                  <img src="/src/assets/person-circle.png" alt="" />
+                </div> */}
                 <ul
                   className="list-unstyled chat-list mt-2 mb-0"
                   style={{
@@ -30,6 +74,9 @@ const Chatbox = () => {
                 <div className="chat-header clearfix">
                   <div className="row">
                     <div className="col-lg-6">
+                      <div>
+                        <img src="/src/assets/primbon-ajaib-logo.png" alt="" />
+                      </div>
                       <div className="chat-about">
                         <h3 className="m-b-0">Primbon Chatbox</h3>
                       </div>
