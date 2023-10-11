@@ -15,14 +15,6 @@ const Chatbox = () => {
               <div id="plist" className="people-list">
                 <div className="input-group">
                   <div className="input-group-prepend">
-                    {/* <span className="input-group-text"> */}
-                    {/* <img
-                      src="/src/assets/person-circle.svg"
-                      style={{ height: "100%" }}
-                    /> */}
-                    {/* <i className="fa fa-search"></i>
-                    </span> */}
-                    {/* <div className="dropdown"> */}
                     <Dropdown>
                       <Dropdown.Toggle
                         variant="secondary"
@@ -30,7 +22,6 @@ const Chatbox = () => {
                       >
                         <i className="fa fa-user"></i> Profile
                       </Dropdown.Toggle>
-
                       <Dropdown.Menu>
                         <Dropdown.Item href="#/action-1">Profile</Dropdown.Item>
                         <Dropdown.Item href="#/action-2">
@@ -39,7 +30,6 @@ const Chatbox = () => {
                         <Dropdown.Item href="#/action-3">Log Out</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
-                    {/* </div> */}
                   </div>
                   <div>
                     <button
@@ -51,11 +41,6 @@ const Chatbox = () => {
                     </button>
                   </div>
                 </div>
-                {/* <br /> */}
-                <hr />
-                {/* <div>
-                  <img src="/src/assets/person-circle.png" alt="" />
-                </div> */}
                 <ul
                   className="list-unstyled chat-list mt-2 mb-0"
                   style={{
