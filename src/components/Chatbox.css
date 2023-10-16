@@ -272,3 +272,7 @@ body{
   top: 0;
   right: 0;
 }
+
+.selected {
+  background-color: #beaeae;
+}

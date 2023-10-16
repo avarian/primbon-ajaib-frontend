@@ -61,6 +61,10 @@ const Login = () => {
         <section>
           <div className="Auth-form-container">
             <form className="Auth-form" onSubmit={handleSubmit}>
+              <div style={{ textAlign: "center", justifyContent: "center" }}>
+                <img src="/src/assets/primbon-ajaib-clean.png" height={100} />
+                <hr />
+              </div>
               <div className="Auth-form-content">
                 <h3 className="Auth-form-title">Sign In</h3>
                 <p

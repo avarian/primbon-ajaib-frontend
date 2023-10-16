@@ -1,7 +1,131 @@
+import { useEffect, useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
+import { useNavigate } from "react-router-dom";
+import { v4 } from "uuid";
+import axios from "../api/Axios";
+import authHeader from "../services/auth.header";
 import "./Chatbox.css";
 
+const CHATBOX_LIST_URL = "/openai/chatbox/list";
+const CHATBOX_MESSAGE_URL = "/openai/chatbox/message";
+const CHATBOX_SEND_MESSAGE = "/openai/chatbox";
+
+interface chatboxLst {
+  code: string;
+  name: string;
+}
+
+interface chatboxMsg {
+  id: string;
+  code: string;
+  name: string;
+  content: string;
+}
+
 const Chatbox = () => {
+  let uuid = v4();
+  const navigate = useNavigate();
+  const [chatboxList, setChatboxList] = useState<Array<chatboxLst>>([]);
+  const [chatboxMessage, setChatboxMessage] = useState<Array<chatboxMsg>>([]);
+  const [codeChatboxList, setCodeChatboxList] = useState("");
+  const [message, setMessage] = useState("");
+  const [chatboxCode, setChatboxCode] = useState("");
+
+  useEffect(() => {
+    const fetchDataChatboxList = async () => {
+      const response = await axios.get(CHATBOX_LIST_URL, {
+        headers: authHeader(),
+      });
+      setChatboxList(response.data.data);
+    };
+
+    fetchDataChatboxList().catch((err) => {
+      if (err.response.status == "401" || err.response.status == "412") {
+        navigate("/login");
+      }
+    });
+  }, []);
+
+  const clickChatboxList = async (
+    // e: React.MouseEvent<HTMLLIElement>,
+    code: string
+  ) => {
+    const fetchDataChatboxMessage = async () => {
+      const response = await axios.get(CHATBOX_MESSAGE_URL + "/" + code, {
+        headers: authHeader(),
+      });
+      setChatboxMessage(response.data.data);
+    };
+
+    fetchDataChatboxMessage().catch((err) => {
+      setChatboxMessage([]);
+      if (err.response.status == "401" || err.response.status == "412") {
+        navigate("/login");
+      }
+    });
+    setCodeChatboxList(code);
+    setChatboxCode(code);
+  };
+
+  const clickNewChatbox = async () => {
+    let code = uuid;
+    setChatboxList([{ code: code, name: "New Chat" }, ...chatboxList]);
+    setCodeChatboxList(code);
+    setChatboxMessage([]);
+  };
+
+  const handleSubmit2 = async () => {
+    let id = uuid;
+    setChatboxMessage([
+      ...chatboxMessage,
+      {
+        id: id,
+        code: id,
+        name: "user",
+        content: message,
+      },
+    ]);
+    const postChatboxMessage = async () => {
+      const response = await axios.post(
+        CHATBOX_SEND_MESSAGE,
+        JSON.stringify({ chatbox_code: chatboxCode, message: message }),
+        {
+          headers: authHeader(),
+        }
+      );
+      return response;
+    };
+
+    postChatboxMessage()
+      .then((response) => {
+        setChatboxCode(response.data.data.chatbox_code);
+        let id2 = uuid;
+        let id3 = uuid;
+        setChatboxMessage([
+          ...chatboxMessage,
+          {
+            id: id2 + "a",
+            code: response.data.data.chatbox_code,
+            name: "user",
+            content: message,
+          },
+          {
+            id: id3 + "b",
+            code: response.data.data.chatbox_code,
+            name: response.data.data.result.role,
+            content: response.data.data.result.content,
+          },
+        ]);
+      })
+      .catch((err) => {
+        setChatboxMessage([]);
+        if (err.response.status == "401" || err.response.status == "412") {
+          navigate("/login");
+        }
+      });
+    setMessage("");
+  };
+
   return (
     <section>
       <link
@@ -27,7 +151,7 @@ const Chatbox = () => {
                         <Dropdown.Item href="#/action-2">
                           Change Password
                         </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">Log Out</Dropdown.Item>
+                        <Dropdown.Item href="/login">Log Out</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
@@ -36,6 +160,7 @@ const Chatbox = () => {
                       className="btn btn-outline-secondary"
                       type="button"
                       style={{ position: "absolute", right: 0 }}
+                      onClick={clickNewChatbox}
                     >
                       New Chat
                     </button>
@@ -48,11 +173,26 @@ const Chatbox = () => {
                     height: "70vh",
                   }}
                 >
-                  <li className="clearfix">
-                    <div className="about">
-                      <div className="name">Tell me joke</div>
-                    </div>
-                  </li>
+                  {chatboxList.map((chatboxList) => (
+                    <li
+                      className={
+                        codeChatboxList == chatboxList.code
+                          ? "clearfix selected"
+                          : "clearfix"
+                      }
+                      id={chatboxList.code}
+                      key={chatboxList.code}
+                      onClick={() => {
+                        clickChatboxList(chatboxList.code);
+                      }}
+                    >
+                      <div className="about">
+                        <div className="name">
+                          <a>{chatboxList.name}</a>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className="chat">
@@ -78,44 +218,24 @@ const Chatbox = () => {
                   }}
                 >
                   <ul className="m-b-0">
-                    <li className="clearfix">
-                      <div className="message other-message float-right">
-                        {" "}
-                        Hi Aiden, how are you? How is the project coming along?{" "}
-                      </div>
-                    </li>
-
-                    <li className="clearfix">
-                      <div className="message my-message">
-                        Are we meeting today?
-                      </div>
-                    </li>
-                    <li className="clearfix">
-                      <div className="message my-message">
-                        Are we meeting today?
-                      </div>
-                    </li>
-                    <li className="clearfix">
-                      <div className="message my-message">
-                        Are we meeting today?
-                      </div>
-                    </li>
-                    <li className="clearfix">
-                      <div className="message my-message">
-                        Are we meeting today?
-                      </div>
-                    </li>
-                    <li className="clearfix">
-                      <div className="message my-message">
-                        Are we meeting today?
-                      </div>
-                    </li>
-                    <li className="clearfix">
-                      <div className="message my-message">
-                        Project has been already finished and I have results to
-                        show you.
-                      </div>
-                    </li>
+                    {chatboxMessage.map((chatboxMessage) => (
+                      <li
+                        className="clearfix"
+                        id={chatboxMessage.id}
+                        key={chatboxMessage.id}
+                      >
+                        <div
+                          className={
+                            chatboxMessage.name == "user"
+                              ? "message other-message float-right"
+                              : "message my-message"
+                          }
+                          style={{ whiteSpace: "pre-line" }}
+                        >
+                          {chatboxMessage.content}
+                        </div>
+                      </li>
+                    ))}
                   </ul>
                 </div>
                 <div className="chat-message clearfix">
@@ -126,9 +246,12 @@ const Chatbox = () => {
                           rows={2}
                           cols={90}
                           className="form-control"
+                          onChange={(e) => setMessage(e.target.value)}
+                          value={message}
                           placeholder="Enter text here..."
                         />
                         <button
+                          onClick={handleSubmit2}
                           className="btn btn-outline-secondary"
                           type="button"
                         >
